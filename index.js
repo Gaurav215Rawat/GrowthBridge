@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
+const authorization = require('./middleware/authMiddleware');
 const {createTables}=require("./table")
 const userRoute = require('./routers/user');
 const contactRoute = require('./routers/contact');
