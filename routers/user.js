@@ -71,19 +71,21 @@ router.put('/:id',[
 
 // DELETE user
 router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
   try {
-    const query = await pool.query('DELETE FROM users WHERE id = $1', [req.params.id]);
-        const result = await client.query(query, [id]);
-        if (result.rows.length > 0) {
-            res.json({ message: 'Deleted successfully', user: result.rows[0] });
-        } else {
-            res.status(404).json({ error: 'User not found' });
-        }
+    const result = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
+
+    if (result.rows.length > 0) {
+      res.json({ message: 'Deleted successfully', user: result.rows[0] });
+    } else {
+      res.status(404).json({ error: 'User not found' });
+    }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Internal server error',message:err.detail});
+    res.status(500).json({ error: 'Internal server error', message: err.detail });
   }
 });
+
 
 // CHANGE PASSWORD
 router.put('/changepassword/:id', [
