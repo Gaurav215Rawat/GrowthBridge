@@ -1,7 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
-const authorization = require('./middleware/authMiddleware');
 const {createTables}=require("./table")
 const userRoute = require('./routers/user');
 const contactRoute = require('./routers/contact');
@@ -18,7 +17,7 @@ app.use(express.json());
 
 // Routes
 app.use('/users', authorization, userRoute);
-app.use('/contacts', authorization, contactRoute);
+app.use('/contacts', contactRoute);
 app.use('/auth', authRoute);
 
 

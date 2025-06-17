@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { pool } = require('../config/db');
 const { body, validationResult } = require('express-validator');
+const authorization = require('../middleware/authMiddleware');
 
 // GET all contacts
 // GET contacts with optional status filter
@@ -59,7 +60,7 @@ router.post(
 );
 
 // UPDATE contact status
-router.put('/:id/status', [
+router.put('/:id/status',authorization, [
   body('status').isIn(['new', 'in_progress', 'resolved']).withMessage('Invalid status')
 ], async (req, res) => {
   const errors = validationResult(req);
