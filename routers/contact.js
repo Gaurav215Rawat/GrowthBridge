@@ -6,7 +6,7 @@ const authorization = require('../middleware/authMiddleware');
 
 // GET all contacts
 // GET contacts with optional status filter
-router.get('/', async (req, res) => {
+router.get('/',authorization, async (req, res) => {
   const { status } = req.query;
 
   try {
