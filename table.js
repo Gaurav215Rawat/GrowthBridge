@@ -28,6 +28,14 @@ const createTables = async () => {
                 status VARCHAR(20) DEFAULT 'new'  -- new | in_progress | resolved
               );
 
+              CREATE TABLE IF NOT EXISTS case_study_pages (
+                id SERIAL PRIMARY KEY,
+                slug TEXT UNIQUE NOT NULL,
+                title TEXT,
+                content JSONB NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+              );
+
         `;
     await client.query(createTablesQuery);
     console.log("Tables created");

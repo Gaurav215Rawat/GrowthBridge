@@ -3,9 +3,6 @@ const helmet = require('helmet');
 const cors = require('cors');
 const authorization = require('./middleware/authMiddleware');
 const {createTables}=require("./table")
-const userRoute = require('./routers/user');
-const contactRoute = require('./routers/contact');
-const authRoute = require('./routers/auth');
 const https = require('https');
 const http = require('http');
 
@@ -16,10 +13,18 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
+
+
+const userRoute = require('./routers/user');
+const contactRoute = require('./routers/contact');
+const caseStudyRoutes = require('./routers/casestudy');
+const authRoute = require('./routers/auth');
+
 // Routes
 app.use('/users', authorization, userRoute);
 app.use('/contacts', contactRoute);
 app.use('/auth', authRoute);
+app.use('/case', caseStudyRoutes);
 
 
 
