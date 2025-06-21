@@ -36,6 +36,15 @@ const createTables = async () => {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
               );
 
+              CREATE TABLE IF NOT EXISTS caseimages(
+               id SERIAL PRIMARY KEY,
+               case_id INT NOT NULL REFERENCES case_study_pages(id) ON DELETE CASCADE,
+               ref VARCHAR(60),
+               image_path TEXT,
+               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+               UNIQUE(case_id,ref)
+              );
+
         `;
     await client.query(createTablesQuery);
     console.log("Tables created");

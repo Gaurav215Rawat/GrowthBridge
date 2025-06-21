@@ -41,19 +41,36 @@ router.get('/all', async (req, res) => {
 router.get('/:slug', async (req, res) => {
   const { slug } = req.params;
 
+  const client = await pool.connect();
   try {
-    const result = await pool.query(`SELECT * FROM case_study_pages WHERE slug = $1`, [slug]);
+    // 1. Fetch the case study page by slug
+    const caseResult = await client.query(`SELECT * FROM case_study_pages WHERE slug = $1`, [slug]);
 
-    if (result.rows.length === 0) {
+    if (caseResult.rows.length === 0) {
       return res.status(404).json({ error: 'Case study not found.' });
     }
 
-    res.status(200).json({ data: result.rows[0] });
+    const caseStudy = caseResult.rows[0];
+
+    // 2. Fetch related images
+    const imageResult = await client.query(
+      `SELECT ref, image_path FROM caseimages WHERE case_id = $1`,
+      [caseStudy.id]
+    );
+
+    // 3. Attach images (or empty array)
+    caseStudy.images = imageResult.rows || [];
+
+    res.status(200).json({ data: caseStudy });
+
   } catch (err) {
-    console.error(err);
+    console.error('Error fetching case study:', err);
     res.status(500).json({ error: 'Internal server error.' });
+  } finally {
+    client.release();
   }
 });
+
 
 // 🟡 PUT - Update a page by slug
 router.put('/:slug', async (req, res) => {
@@ -87,6 +104,7 @@ router.put('/:slug', async (req, res) => {
 // 🔴 DELETE - Delete a page by slug
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
+   
 
   try {
     const result = await pool.query(

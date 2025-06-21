@@ -5,7 +5,7 @@ const authorization = require('./middleware/authMiddleware');
 const {createTables}=require("./table")
 const https = require('https');
 const http = require('http');
-
+const path = require('path');
 const app = express();
 
 // Middleware
@@ -13,19 +13,21 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-
+// Serve the uploads folder statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const userRoute = require('./routers/user');
 const contactRoute = require('./routers/contact');
 const caseStudyRoutes = require('./routers/casestudy');
 const authRoute = require('./routers/auth');
+const caseimage = require('./routers/caseimage');
 
 // Routes
 app.use('/users', authorization, userRoute);
 app.use('/contacts', contactRoute);
 app.use('/auth', authRoute);
 app.use('/case', caseStudyRoutes);
-
+app.use('/caseimage', caseimage);
 
 
 
