@@ -100,6 +100,11 @@ router.put('/changepassword/:id', [
 
   const { oldPassword, newPassword } = req.body;
   const userId = req.params.id;
+  const user_id=req.user.id;
+  
+  if(userId!=user_id){
+    return res.status(401).json({error:"User can only change its own password"})
+  }
 
   try {
     // Get current hashed password from DB
