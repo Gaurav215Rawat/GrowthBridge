@@ -6,13 +6,13 @@ const { pool } = require('../config/db');
 const uploadHomepageImage = require('../middleware/banner'); // path to your multer config
 
 
-router.post('/:case_id', uploadHomepageImage.single('image'), async (req, res) => {
-  const { case_id } = req.params;
-  const { ref } = req.body;
+router.post('/:case_id/:ref', uploadHomepageImage.single('image'), async (req, res) => {
+  const { case_id, ref } = req.params;
+ 
   const imageFile = req.file;
 
-  if (!ref || !imageFile) {
-    return res.status(400).json({ error: 'ref, type, and image are required' });
+  if (!imageFile) {
+    return res.status(400).json({ error:`image are required` });
   }
 
   const imagePath = `/uploads/${case_id}/${imageFile.filename}`;
@@ -86,9 +86,8 @@ router.delete('/:id', async (req, res) => {
 });
 
 
-router.put('/:case_id', uploadHomepageImage.single('image'), async (req, res) => {
-  const { case_id } = req.params;
-    const { ref } = req.body;
+router.put('/:case_id/:ref', uploadHomepageImage.single('image'), async (req, res) => {
+  const { case_id,ref } = req.params;
   const imageFile = req.file;
 
   if (!imageFile) {
@@ -112,7 +111,7 @@ router.put('/:case_id', uploadHomepageImage.single('image'), async (req, res) =>
 
     // Delete old image file if extensions are different
     if (oldImage.image_path && newFileExt !== oldFileExt) {
-      const oldImagePathOnDisk = path.join(__dirname, '..', '..', oldImage.image_path);
+      const oldImagePathOnDisk = path.join(__dirname, '..', oldImage.image_path);
       fs.unlink(oldImagePathOnDisk, (err) => {
         if (err) console.warn(`⚠️ Could not delete old image: ${err.message}`);
       });

@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
   },
 
   filename: function (req, file, cb) {
-    const ref = req.body.ref || 'image';
+    const ref = req.params.ref || 'image';
     const sanitizedRef = ref.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '');
     const extension = path.extname(file.originalname);
     const filename = `${sanitizedRef}${extension}`;
